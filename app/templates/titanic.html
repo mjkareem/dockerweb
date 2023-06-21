@@ -4,26 +4,97 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Titanic</title>
+    <title>Titanic Page</title>
     <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 </head>
 
 <body>
-    <main>
-        <a href="https://www.hwr-berlin.de/">Welcome to HWR Berlin!</a>
-        <h1>I have been seen {{ count }} times.</h1>
-        <ul>
-            {% for i in range(1, count+1) %}
-            <li>{{ i }}: Hello {{ name }}! </li>
-            {% endfor %}
-        </ul>
-        <img src="{{ url_for('static', filename='images/image.jpg') }}" alt="Image">
+    <header>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/titanic">Titanic</a></li>
+                <li><a href="https://github.com//mjkareem/dockerweb">About</a></li>
+            </ul>
+        </nav>
+    </header>
 
+    <main>
+        <h1>Titanic Page</h1>
+        <p>Number of hits: {{ count }}</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Survived</th>
+                    <th>Pclass</th>
+                    <th>Name</th>
+                    <th>Sex</th>
+                    <th>Age</th>
+                    <th>SibSp</th>
+                    <th>Parch</th>
+                    <th>Ticket</th>
+                    <th>Fare</th>
+                    <th>Cabin</th>
+                    <th>Embarked</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for index, row in titanic_data.iterrows() %}
+                <tr>
+                    <td>{{ row.loc['survived'] }}</td>
+                    <td>{{ row.loc['pclass'] }}</td>
+                    <td>{{ row.loc['name'] }}</td>
+                    <td>{{ row.loc['sex'] }}</td>
+                    <td>{{ row.loc['age'] }}</td>
+                    <td>{{ row.loc['sibSp'] }}</td>
+                    <td>{{ row.loc['parch'] }}</td>
+                    <td>{{ row.loc['ticket'] }}</td>
+                    <td>{{ row.loc['fare'] }}</td>
+                    <td>{{ row.loc['cabin'] }}</td>
+                    <td>{{ row.loc['embarked'] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div id="chart-container">
+            <canvas id="bar-chart"></canvas>
+        </div>
     </main>
-    
-    <footer>
-        <p>Author: Mujahid Abdulkareem</p>
-    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var survivedData = {
+                labels: ["Men", "Women"],
+                datasets: [{
+                    label: "Survived",
+                    data: [
+                        {{ titanic_survived_men }},
+                        {{ titanic_survived_women }}
+                    ],
+                    backgroundColor: ["rgba(54, 162, 235, 0.5)", "rgba(255, 99, 132, 0.5)"]
+                }]
+            };
+
+            var chartOptions = {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        precision: 0
+                    }
+                }
+            };
+
+            var barChart = new Chart(document.getElementById("bar-chart"), {
+                type: "bar",
+                data: survivedData,
+                options: chartOptions
+            });
+        });
+    </script>
 </body>
 
 </html>
