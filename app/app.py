@@ -1,4 +1,5 @@
 import time
+import pandas as pd
 import redis
 from flask import Flask, render_template
 import os
